@@ -1,0 +1,23 @@
+<% layout('layouts/boilerplate')%>
+<div class="row">
+    <h1 class="text-center">New Collection</h1>
+    <div class="col-6 offset-3">
+        <form action="/collections" class="new-collection validated-form" method='POST' enctype='multipart/form-data' novalidate>
+            <div class="mb-2">
+                <label class='form-label' for="title">Enter Collection Title: </label>
+                <input required class='form-control' type="text" id="title" name='collection[title]' placeholder='Title'>    
+            </div>
+            <div class="mb-2">
+                <label class='form-label' for="image-upload">Upload Image: </label>
+                <input class='form-control' type="file" id="image-upload" name='image' placeholder='Image URL'>    
+            </div>
+            <div class="mb-2">
+                <label class='form-label' for="description">Enter Description: </label>
+                <textarea required class='form-control' name="collection[description]" id="description" cols="30" rows="3">Summarize the collection.</textarea>    
+            </div>
+            <div class="mb-2">
+                <button class='btn btn-info' type="submit">Create</button>
+            </div>
+        </form>
+    </div>
+</div>

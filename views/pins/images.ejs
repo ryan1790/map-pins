@@ -1,0 +1,27 @@
+<% layout('layouts/boilerplate') %>
+
+<h1 class="text-center">Edit Images Displayed for <em><%=pin.title%></em></h1>
+<div class="col-6 offset-3">
+    <form action="/collections/<%=collection_id%>/pins/<%=pin._id%>/images?_method=PUT"
+        enctype='multipart/form-data' class="un-validated-form" method='POST' novalidate>
+        <div class="mb-2">
+            <label class='form-label' for="image-upload">Upload Images: </label>
+            <input required class='form-control' type="file" id="image-upload" name='images' 
+            multiple accept=".jpg, .jpeg, .png" value='<%=pin.title%>'>    
+        </div>
+        <% if (pin.images.length) { %>
+            <h6>Select image or images to delete: </h6>
+            <div class="d-flex">
+            <% pin.images.forEach( (image, i) => { %>
+                <div class="card mx-1 p-1 text-center">
+                    <img class='img-thumbnail' src="<%=image.thumbnail%>">
+                    <input class='form-check m-auto' type="checkbox" id='image-<%=i%>' 
+                    name="deleteImages[]" value='<%=image.fileName%>'>
+                    <label for="image-<%=i%>">Delete?</label>
+                </div>
+            <% }) %>
+            </div>
+        <% } %>
+        <button type="submit" class='btn btn-primary my-3'>Update Images</button>
+    </form>
+</div>

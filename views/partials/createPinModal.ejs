@@ -1,0 +1,37 @@
+<script defer src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js'></script>
+<script>
+    accessToken = '<%- process.env.MAPBOX_ACCESS_TOKEN %>';
+</script>
+<script defer src='/js/findCoordinates.js'></script>
+<div class="modal fade" id="create-pin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Pick Coordinates for Pin</h5>
+          <button type="button" class="btn-close" id='close' data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id='coordinate-list'>
+            <div id='map' class='form-map'></div>
+            <div id='manual-coordinates'>
+                <input required class='form-check-input' type="radio" name="coordinates" id="self-enter-value">
+                <label for="self-enter-value">Check to select self-entered coordinates</label>
+            </div>
+            <p>Enter Coordinates:</p>
+            <div class='d-flex mb-2'>
+                <div class="container d-inline w-50">
+                    <label for="longitude"> Longitude: </label>
+                    <input class=form-control type="number" step='.01' min='-180' max='180' id="longitude">
+                </div>
+                <div class="container d-inline w-50">
+                    <label for="latitude"> Latitude: </label>
+                    <input class=form-control type="number" step='.01' min='-180' max='180' id="latitude">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Create</button>
+            <button type="button" id='cancel' class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+</div>

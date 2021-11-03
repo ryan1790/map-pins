@@ -1,0 +1,11 @@
+<script src='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css' rel='stylesheet' />
+
+<div id="map" class='cluster-map'></div>
+<script>
+    const accessToken = '<%- process.env.MAPBOX_ACCESS_TOKEN %>';
+    const collection = <%- JSON.stringify(collection) %>;
+    const pins = { features: collection.pins };
+</script>
+
+<script defer src='/js/mapCluster.js'></script>

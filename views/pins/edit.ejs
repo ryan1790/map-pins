@@ -1,0 +1,32 @@
+<% layout('layouts/boilerplate')%>
+
+<script src='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css' rel='stylesheet' />
+
+<div class="row">
+    <h1 class="text-center">Edit Pin: <em><%=pin.title%></em></h1>
+    <div class="col-6 offset-3">
+        <form action="/collections/<%=collection_id%>/pins/<%=pin._id%>?_method=PUT" class="new-pin validated-form" method='POST' novalidate>
+            <div class="mb-2">
+                <label class='form-label' for="title">Enter Pin Title: </label>
+                <input required class='form-control' type="text" id="title" name='pin[title]' value='<%=pin.title%>'>    
+            </div>
+            <div class="mb-2">
+                <label class='form-label' for="description">Enter Pin description: </label>
+                <input required class='form-control' type="text" id="description" name='pin[description]' value='<%=pin.description%>'>    
+            </div>
+            <div class="mb-2">
+                <label class='form-label' for="location">Enter Location: </label>
+                <input required class='form-control' name="pin[location]" id="location" type='text' value='<%=pin.location%>'>    
+            </div>
+
+            <div class="mb-2">
+                <button type="button" id='findCoordinates' class="btn btn-primary my-1" data-bs-toggle="modal" data-bs-target="#create-pin">
+                    Edit Coordinates
+                </button>
+                <button class='btn btn-info' type="submit">Update Pin</button>
+            </div>
+            <%- include('../partials/editPinModal', { pin: pin }) %>
+        </form>
+    </div>
+</div>

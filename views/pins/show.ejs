@@ -1,0 +1,104 @@
+<% layout('layouts/boilerplate') %>
+<link rel="stylesheet" type="text/css" href="/stylesheets/starability-grow.css"/>
+<div class="row">
+  <%- include('../partials/collectionSidebar') %>
+  <div class="col-9">
+    <div class="container">
+      <h1><%=pin.title%></h1>
+      <% if (currentUser && currentUser._id.equals(pin.creator._id)) { %>
+        <div class='mb-2'>
+          <a href='/collections/<%=collection._id%>/pins/<%=pin._id%>/edit'class="btn btn-sm btn-info">Edit Pin</a>
+          <a href='/collections/<%=collection._id%>/pins/<%=pin._id%>/images'class="btn btn-sm btn-secondary">Edit Images</a>
+          <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#p-<%=pin._id%>">
+            Delete Pin
+          </button>
+          <form class='d-inline' action='/collections/<%=collection._id%>/pins/<%=pin._id%>?_method=DELETE' method='POST'>
+            <%- include('../partials/confirmModal', { id: pin._id, title: pin.title }) %>
+          </form>
+        </div>
+      <% } %>
+      <% if (pin.images.length) { %> 
+        <div id='carousel-pictures' class="container d-flex justify-content-center align-items-center">
+          <%- include('../partials/carousel') %>
+        </div>
+      <% } %>
+
+      <p class='text-muted'><%=pin.location%></p>
+      <p><%=pin.description%></p>
+      <p><a href="/users/<%=pin.creator._id%>">
+        <%=pin.creator.username%>
+      </a></p>
+      <form class='mb-3 validated-form' novalidate action="/collections/<%=collection._id%>/pins/<%=pin._id%>" method='POST'>
+        <% if (currentUser) { %>
+          <h2>Add a Comment:</h2>
+          <% if (!userRated) { %>
+            <div class="mb-3">
+              <fieldset class="starability-grow">
+                <legend>Star Rating:</legend>
+                <input type="radio" id="no-rate" class="input-no-rate" name="comment[rating]" value="0" checked aria-label="No rating." />
+        
+                <input type="radio" id="rate1" name="comment[rating]" value="1" />
+                <label for="rate1">1 star.</label>
+            
+                <input type="radio" id="rate2" name="comment[rating]" value="2" />
+                <label for="rate2">2 stars.</label>
+            
+                <input type="radio" id="rate3" name="comment[rating]" value="3" />
+                <label for="rate3">3 stars.</label>
+            
+                <input type="radio" id="rate4" name="comment[rating]" value="4" />
+                <label for="rate4">4 stars.</label>
+            
+                <input type="radio" id="rate5" name="comment[rating]" value="5" />
+                <label for="rate5">5 stars.</label>
+            
+                <span class="starability-focus-ring"></span>
+              </fieldset>
+            </div>
+          <% } %>
+          <div class="mb-3">
+              <label class='form-label'for="body">Comment: </label>
+              <textarea class='form-control'name="comment[body]" id="body" cols="30" rows="3"></textarea>
+          </div>
+          <button class="btn btn-success">Submit</button>
+        <% } %>
+      </form>
+
+      <% if (pin.comments.length) { %>
+        <h3>Comments</h3>
+        <%- include('../partials/searchBars') %>
+        <% if (pageDisplay.prevPage) { %>
+          <a href="?<%=pageDisplay.queryString%>&page=<%=pageDisplay.prevPage.page%>" class="btn btn-secondary btn-sm">Page <%=pageDisplay.prevPage.page%></a>
+        <% } %>
+        <% if (pageDisplay.nextPage) { %>
+          <a href="?<%=pageDisplay.queryString%>&page=<%=pageDisplay.nextPage.page%>" class="btn btn-secondary btn-sm">Page <%=pageDisplay.nextPage.page%></a>
+        <% } %>
+        
+        <% for (comment of pageDisplay.currentPage) { %>
+          <div class="card my-2 p-2">
+            <% if (comment.rating) { %>
+              <p class="starability-result" data-rating="<%=comment.rating%>">
+                Rated: <%=comment.rating%> stars
+              </p>
+            <% } %>
+            <p class='card-text'><%=comment.body%></p>
+            <p class='text-muted'><a href='/users/<%=comment.creator._id%>'>
+              <%=comment.creator.username%>
+            </a></p>
+            <% if (currentUser && comment.creator.equals(currentUser._id)) { %>
+              <div>
+                <a href="/collections/<%=collection._id%>/pins/<%=pin._id%>/<%=comment._id%>/edit" class="btn btn-info btn-sm">Edit</a>
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#p-<%=comment._id%>">
+                  Delete
+                </button>
+                <form class='d-inline' action="/collections/<%=collection._id%>/pins/<%=pin._id%>/<%=comment._id%>?_method=DELETE" method='POST'>
+                  <%- include('../partials/confirmModal', { id: comment._id, title: 'comment' }) %>
+                </form>
+            </div>
+            <% } %>
+          </div>
+        <% } %>
+      <% } %>
+    </div>
+  </div>
+</div>

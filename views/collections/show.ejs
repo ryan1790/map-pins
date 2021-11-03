@@ -1,0 +1,56 @@
+<% layout('layouts/boilerplate')%>
+
+<div class="row">
+  <%- include('../partials/collectionSidebar') %>
+
+  <div class="col-9">
+    <%- include('../partials/map', { collection }) %>
+    <% if (pageDisplay.currentPage) { %>
+      <div class="container pt-3">
+        <h2>Pins</h2>
+        <%- include('../partials/searchBars') %>
+        <% if (pageDisplay.prevPage) { %>
+          <a href="?<%=pageDisplay.queryString%>&page=<%=pageDisplay.prevPage.page%>" class="btn btn-secondary btn-sm">Page <%=pageDisplay.prevPage.page%></a>
+        <% } %>
+        <% if (pageDisplay.nextPage) { %>
+          <a href="?<%=pageDisplay.queryString%>&page=<%=pageDisplay.nextPage.page%>" class="btn btn-secondary btn-sm">Page <%=pageDisplay.nextPage.page%></a>
+        <% } %>
+
+      <% for (pin of pageDisplay.currentPage) { %>
+        <div class="card my-4 px-2 py-2 shadow">
+          <button class="btn btn-lg btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#pin<%=pin._id%>" aria-expanded="false" aria-controls="collapse-<%=pin.title%>">
+            <%=pin.title%>
+          </button>
+          <div class="collapse mt-4" id="pin<%=pin._id%>">
+            <p><%=pin.location%></p>
+            <p><%=pin.description%></p>
+            <p class='text-muted'><a href="/users/<%=pin.creator._id%>">
+              <%=pin.creator.username%>
+            </a></p>
+            <% if (currentUser && pin.creator.equals(currentUser._id)) { %>
+              <div>
+                <a href="/collections/<%=collection._id%>/pins/<%=pin._id%>/edit" class="btn btn-sm btn-info">Edit Pin</a>
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#p-<%=pin._id%>">
+                  Delete Pin
+                </button>
+                <form class='d-inline' action="/collections/<%=collection._id%>/pins/<%=pin._id%>?_method=DELETE" method='POST'>
+                  <%- include('../partials/confirmModal', { id: pin._id, title: pin.title }) %>
+                </form>
+              </div>
+            <% } %>
+          <a href="/collections/<%=collection._id%>/pins/<%=pin._id%>/" class="mt-2 mb-2 btn btn-success">See Details</a>
+          </div>
+        </div>
+        <% } %>
+      </div>
+    <% } else { %>
+      <div class="container pt-3">
+        <%= pageDisplay.empty? 'No results found. Modify Search?': 'No pins yet! Start creating!' %>
+        <% if (pageDisplay.empty) { %>
+          <%- include('../partials/searchBars') %>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+</div>
+

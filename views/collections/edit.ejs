@@ -1,0 +1,29 @@
+<% layout('layouts/boilerplate')%>
+
+<div class="row">
+    <h1 class='text-center'>Edit <em><%=collection.title%></em></h1>
+    <div class="col-6 offset-3">
+        <form action="/collections/<%=collection._id%>?_method=PUT" 
+            class="new-collection validated-form" enctype='multipart/form-data' novalidate method='POST'>
+            <div class="mb-2">
+                <label class='form-label'for="title">Enter Collection Title: </label>
+                <input required class='form-control' type="text" id="title" name='collection[title]' value='<%= collection.title %>'>
+            </div>
+            <div class="mb-2">
+                <label class='form-label'for="image-upload">Enter Image Source: </label>
+                <input class='form-control' type="file" id="image-upload" name='image'>
+            </div>
+            <div class="mb-2">
+                <label class='form-label'for="description">Enter Description: </label>
+                <textarea required class='form-control' name="collection[description]" id="description" 
+                    cols="30" rows="3"><%= collection.description %></textarea>
+            </div>
+
+            <button class='btn btn-warning' type="submit">Save Changes</button>
+        </form>
+        <nav class='mt-4'>
+            <a href="/collections/<%= collection._id %>">"<%= collection.title %>" Page</a>
+            <a href="/collections">Collections Page</a>
+        </nav>
+    </div>
+</div>

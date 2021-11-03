@@ -1,0 +1,31 @@
+<form class='d-inline' action='/collections/<%=collection._id%>?_method=DELETE' method='POST'>
+  <%- include('../partials/confirmModal', { id: collection._id, title: collection.title }) %>
+</form>
+<div class="sidebar col-3">
+  <div class="card mb-4 position-fixed w-25">
+    <img src="<%=collection.image.url%>" class="card-img-top" id="sidebar-image">
+    <div class="card-body">
+      <h5 class="card-title"><%=collection.title%></h5>
+      <p class='card-text'><%= collection.description %></p>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">Made by: <a href="/users/<%=collection.creator._id%>">
+        <%=collection.creator.username%>
+      </a></li>
+      <li class="list-group-item">Visible to: Public</li>
+    </ul>
+    
+    <% if (currentUser && collection.creator.equals(currentUser._id)) { %>
+      <div class="card-body text-center">
+        <a href="/collections/<%= collection._id %>/edit" class='btn-sm btn btn-info my-1'>Edit Collection</a>
+        <button type="button" class="btn btn-sm btn-danger my-1" data-bs-toggle="modal" data-bs-target="#p-<%=collection._id%>">
+          Delete Collection
+        </button>
+      </div>
+    <% } %>
+    <div class="card-footer text-center">
+      <a class="btn btn-primary my-1" href='/collections/<%=collection._id%>'>Main Page</a>
+      <a class="btn btn-success my-1" href='/collections/<%=collection._id%>/pins/new'>New Pin</a>
+    </div>
+  </div>
+</div>

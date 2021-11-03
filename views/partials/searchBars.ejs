@@ -1,0 +1,17 @@
+<script defer src='/js/searchBar.js'></script>
+
+<div class="container d-flex">
+    <div class="container">
+        <label class='form-label' for="filter">Search Text: </label> 
+        <input id='filter' name='filter' class='form-control d-inline'type="text" value='<%=pageDisplay.filter? pageDisplay.filter: ''%>'>    
+    </div>
+    <div class="container">
+        <label class='form-label' for="filter">Search Users: </label>
+        <input id='author' name='author' class='form-control d-inline'type="text" value='<%=pageDisplay.author? pageDisplay.author: ''%>'>    
+    </div>
+    <div>
+    </div>
+</div>
+<div class="container mt-2 mb-3">
+    <button type='button' id='search' class="btn btn-sm btn-info">Search</button>
+</div>

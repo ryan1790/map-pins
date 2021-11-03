@@ -1,0 +1,38 @@
+body {
+	overflow-x: hidden;
+}
+
+#sidebar-image {
+	max-height: 20vh;
+	object-fit: cover;
+}
+
+.cluster-map {
+	width: 100%;
+	height: 400px;
+}
+
+.form-map {
+	width: 100%;
+	height: 300px;
+}
+
+.card-display {
+	height: 400px;
+	overflow: scroll;
+}
+
+.card-element {
+	width: 200px;
+	max-height: 350px;
+}
+
+#carousel-pictures {
+	height: 400px;
+	width: 400px;
+}
+
+.carousel-picture {
+	max-height: 400px;
+	max-width: 100%;
+}

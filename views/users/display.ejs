@@ -1,0 +1,110 @@
+<% layout('layouts/boilerplate') %>
+<script>
+
+</script>
+<div class="container">
+    <h1><%= isUser? 'My': `${userDisplay.username}'s` %> Account</h1>
+    <% if (isUser && false) { %>
+        <a href="/users/<%=currentUser._id%>/edit" class="btn btn-info">Edit Account Info</a>
+    <% } %>
+    <% if (!isUser && currentUser) { %>
+        <div>
+            <% if (displayRequest) { %>
+                <form class='d-inline' action="/users/<%=userDisplay._id%>" method='post'>
+                    <input type="hidden" value="<%=userDisplay._id%>" name='userId'>
+                    <button class="btn btn-primary">Send Friend Request</button>
+                </form>
+            <% } %>
+            
+            <% if (displayRespond) { %>
+                <form class='d-inline' action="/users/<%=userDisplay._id%>?_method=PUT" method='post'>
+                    <input type="hidden" value="<%=userDisplay._id%>" name='userId'>
+                    <input type="hidden" value="accept" name='response'>
+                    <button href="#" class="btn btn-success">Accept Friend Request</button>
+                </form>
+    
+                <form class='d-inline' action="/users/<%=userDisplay._id%>?_method=PUT" method='post'>
+                    <input type="hidden" value="<%=userDisplay._id%>" name='userId'>
+                    <input type="hidden" value="decline" name='response'>
+                    <button href="#" class="btn btn-danger">Reject Friend Request</button>
+                </form>
+            <% } %>
+            
+            <% if (displayRemove) { %>
+                <form class='d-inline' action="/users/<%=userDisplay._id%>?_method=DELETE" method='post'>
+                    <input type="hidden" value="<%=userDisplay._id%>" name='userId'>
+                    <button href="#" class="btn btn-danger">Remove Friend</button>
+                </form>
+            <% } %>
+        </div>
+    <% } %>
+
+    <div class="container">
+        <% if (isUser && currentUser.requests.length) { %>
+            <div class="container card-display shadow my-4 py-1">
+                <h4>Friend Requests</h4>
+                <div class="d-flex flex-row w-100">
+                    <% for (let request of currentUser.requests) { %>
+                        <div class="card card-element p-3 m-2">
+                            <a href="/users/<%=request%>">User's Account Page</a>
+                        </div>
+                    <% } %> 
+                </div>
+            </div>
+        <% } %>
+
+        <% if (collections.length) { %>
+            <div class="container card-display shadow my-4 py-1">
+                <h4>Collections</h4>
+                <div class='d-flex flex-row w-100'>
+                    <% for (let collection of collections) { %>
+                        <div class="card card-element p-3 m-2">
+                            <img class="card-image-top" src='<%=collection.image.url%>'>
+                            <a href="/collections/<%=collection._id%>">
+                                <h5 class="card-title"><%=collection.title%></h5>
+                            </a>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        <% } %>
+
+        <% if (userDisplay.friends.length) { %>
+            <div class="container card-display shadow my-4 py-1">
+                <h4>Friends</h4>
+                <div class="d-flex flex-row w-100">
+                    <% for(let friend of userDisplay.friends) { %>
+                        <div class="card card-element p-3 m-2">
+                            <div class="card-text">
+                                <a href="/users/<%=friend._id%>"><%=friend.username%></a>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        <% } %>
+
+        <% if (pins && pins.length) { %>
+            <div class="container card-display shadow my-4 py-1">
+                <h4>Most Recent Pins</h4 class='py-1'>
+                <div class='d-flex flex-row w-100'>
+                    <% for (let i in pins) { %>
+                        <a href="/collections/<%=matchCollections[i]%>/pins/<%=pins[i]._id%>">
+                            <div class="card card-element p-3 m-2">
+                                <% if (pins[i].images.length) { %>
+                                    <img class="card-image-top" src='<%=pins[i].images[0].url%>'>
+                                    <% } %>
+                                <h5 class="card-title"><%=pins[i].title%></h5>
+                                
+                                <p class="card-text">
+                                    <%=pins[i].title%>
+                                </p>
+                            </div>
+                        </a>
+                    <% } %>
+                </div>
+            </div>
+        <% } %>
+
+    </div>
+</div>

@@ -1,0 +1,43 @@
+<script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js'></script>
+<script defer src='/js/findCoordinates.js'></script>
+<script>
+  let accessToken = '<%- process.env.MAPBOX_ACCESS_TOKEN %>';
+  let pin = <%- JSON.stringify(pin)%>;
+</script>
+
+<div class="modal fade" id="create-pin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Pick Coordinates for Pin</h5>
+          <button type="button" class="btn-close" id='revert' data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id='map' class='form-map'></div>
+          Select most accurate, or enter your own coordinates (right click map to enter those coordinates):
+          <div id='coordinate-list'>
+            <div class='form-check'>
+              <div id="manual-coordinates">
+                <input class='form-check-input' type="radio" name="coordinates" id="self-enter-value" value='<%=JSON.stringify(pin.geometry.coordinates)%>' checked>
+                <label for='self-enter-value'>Enter Coordinates: (previously saved coordinates entered by default)</label>
+              </div>
+                <div class='d-flex'>
+                  <div class="container d-inline w-50">
+                    <label for="longitude"> Longitude: </label>
+                    <input class=form-control type="number" min='-180' max='180' step='.01' id="longitude" value='<%=Math.round(pin.geometry.coordinates[0]*100)/100%>'>
+                  </div>
+                  <div class="container d-inline w-50">
+                    <label for="latitude"> Latitude: </label>
+                    <input class=form-control type="number" min='-180' max='180' step='.01' id="latitude" value='<%=Math.round(pin.geometry.coordinates[1]*100)/100%>'>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id='select' data-bs-dismiss="modal">Select</button>
+          <button type="button" id='undo' class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>

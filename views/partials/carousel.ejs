@@ -1,0 +1,26 @@
+<div id="pinIndicators" class="carousel slide" data-bs-ride="carousel">
+  <% if (pin.images.length > 1) { %>
+    <ol class="carousel-indicators">
+      <% for (let i in pin.images) { %>
+      <li data-bs-target="#pinIndicators" data-bs-slide-to="<%=i%>" class="<%= i==='0'? 'active': ''%>"></li>
+      <% } %>
+    </ol>
+  <% } %>
+  <div class="carousel-inner">
+    <% for (let i in pin.images) { %>
+      <div class="carousel-item <%= i==='0'? 'active': ''%>">
+          <img src="<%=pin.images[i].display%>" class="carousel-picture d-block">
+      </div>
+    <% } %>
+  </div>
+  <% if (pin.images.length > 1) { %>
+    <a class="carousel-control-prev" href="#pinIndicators" role="button" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#pinIndicators" role="button" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </a>
+    <% } %>
+</div>
