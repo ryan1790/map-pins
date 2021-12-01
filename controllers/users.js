@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const Pin = require('../models/pin');
 const Collection = require('../models/collection');
+// const { cloudinary } = require('../cloudinary');
 
 module.exports.renderLoginForm = (req, res) => {
 	const title = 'Log In';
@@ -26,7 +27,11 @@ module.exports.renderRegisterForm = (req, res) => {
 
 module.exports.create = async (req, res, next) => {
 	try {
+		const { file } = req;
 		const { user, password } = req.body;
+		if (file) {
+			user.image = { url: file.path, fileName: file.filename };
+		}
 		const newUser = new User(user);
 		const registeredUser = await User.register(newUser, password);
 		req.login(registeredUser, err => {
@@ -52,18 +57,20 @@ module.exports.account = async (req, res) => {
 		isUser = req.user._id.equals(display._id);
 		const user = await User.findById(req.user._id);
 		for (let request of user.requests) {
-			if (request.equals(display._id)) {
+			if (request.pin.equals(display._id)) {
 				displayRequest = false;
 				displayRespond = true;
 				displayRemove = false;
+				break;
 			}
 		} // Check to see if users has been requested
 		if (displayRequest) {
 			for (let request of display.requests) {
-				if (request.equals(user._id)) {
+				if (request.pin.equals(user._id)) {
 					displayRequest = false;
 					displayRespoond = true;
 					displayRemove = false;
+					break;
 				}
 			}
 		} // Check to see if target has been requested
@@ -73,6 +80,7 @@ module.exports.account = async (req, res) => {
 					displayRequest = false;
 					displayRespond = false;
 					displayRemove = true;
+					break;
 				}
 			}
 		} // Check to see if already friends
@@ -102,7 +110,9 @@ module.exports.account = async (req, res) => {
 };
 
 module.exports.request = async (req, res) => {
-	await User.findByIdAndUpdate(req.body.userId, { $push: { requests: req.user._id } });
+	await User.findByIdAndUpdate(req.body.userId, {
+		$push: { requests: { pin: req.user._id, username: req.user.username } }
+	});
 	res.redirect(`/users/${req.body.userId}`);
 };
 
@@ -113,11 +123,11 @@ module.exports.respond = async (req, res) => {
 		await User.findByIdAndUpdate(requester, { $push: { friends: user } });
 		await User.findByIdAndUpdate(user, {
 			$push: { friends: requester },
-			$pull: { requests: requester }
+			$pull: { requests: { pin: requester } }
 		});
 		req.flash('success', 'Friend request accepted');
 	} else if (req.body.response === 'decline') {
-		await User.findByIdAndUpdate(user, { $pull: { requests: requester } });
+		await User.findByIdAndUpdate(user, { $pull: { requests: { pin: requester } } });
 		req.flash('success', 'Friend request declined');
 	} else {
 		req.flash('error', 'Invalid operation');
@@ -132,4 +142,46 @@ module.exports.remove = async (req, res) => {
 	await User.findByIdAndUpdate(user, { $pull: { friends: userTwo } });
 	await User.findByIdAndUpdate(userTwo, { $pull: { friends: user } });
 	res.redirect(`/users/${user}`);
+};
+
+module.exports.renderEditForm = async (req, res) => {
+	const user = await User.findById(req.user._id);
+	res.render('users/edit', { title: 'Edit Account', user });
+};
+
+module.exports.edit = async (req, res) => {
+	const user = await User.findById(req.user._id);
+	const upload = req.file ? true : false;
+	let image = '';
+	if (upload) {
+		image = user.image.fileName;
+	}
+	try {
+		user.email = req.body.user.email;
+		user.username = req.body.user.username;
+		if (upload) {
+			user.image.fileName = req.file.fileName;
+			user.image.url = req.file.path;
+		}
+		await user.save();
+		if (image) {
+			// Delete old image
+		}
+	} catch (e) {
+		console.log(e.message);
+		req.flash('error', e.message);
+		if (image) {
+			// Delete newly uploaded image
+		}
+		res.redirect(`/users/${req.user._id}`);
+		return;
+	}
+	if (req.body.newPassword) {
+		user.changePassword(req.body.oldPassword, req.body.newPassword, err => {
+			if (err) {
+				req.flash('error', 'Incorrect password. Password not updated.');
+			}
+		});
+	}
+	res.redirect(`/users/${req.user._id}`);
 };

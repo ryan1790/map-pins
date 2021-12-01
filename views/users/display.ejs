@@ -4,6 +4,11 @@
 </script>
 <div class="container">
     <h1><%= isUser? 'My': `${userDisplay.username}'s` %> Account</h1>
+    <% if (userDisplay.image) { %>
+        <div class="container">
+            <img src="<%=userDisplay.display%>" class="profile-img my-2">
+        </div>
+    <% } %>
     <% if (isUser && false) { %>
         <a href="/users/<%=currentUser._id%>/edit" class="btn btn-info">Edit Account Info</a>
     <% } %>
@@ -41,12 +46,12 @@
 
     <div class="container">
         <% if (isUser && currentUser.requests.length) { %>
-            <div class="container card-display shadow my-4 py-1">
+            <div class="display-requests container shadow my-4 py-1">
                 <h4>Friend Requests</h4>
-                <div class="d-flex flex-row w-100">
+                <div class="d-flex flex-row w-100 request-display">
                     <% for (let request of currentUser.requests) { %>
-                        <div class="card card-element p-3 m-2">
-                            <a href="/users/<%=request%>">User's Account Page</a>
+                        <div class="requests card m-2 p-1">
+                            <a href="/users/<%=request.id%>"><%=request.username%></a>
                         </div>
                     <% } %> 
                 </div>
@@ -58,7 +63,7 @@
                 <h4>Collections</h4>
                 <div class='d-flex flex-row w-100'>
                     <% for (let collection of collections) { %>
-                        <div class="card card-element p-3 m-2">
+                        <div class="shadow card card-element p-3 m-2">
                             <img class="card-image-top" src='<%=collection.image.url%>'>
                             <a href="/collections/<%=collection._id%>">
                                 <h5 class="card-title"><%=collection.title%></h5>
@@ -70,11 +75,14 @@
         <% } %>
 
         <% if (userDisplay.friends.length) { %>
-            <div class="container card-display shadow my-4 py-1">
+            <div class="container friend-display shadow my-4 py-1">
                 <h4>Friends</h4>
                 <div class="d-flex flex-row w-100">
                     <% for(let friend of userDisplay.friends) { %>
-                        <div class="card card-element p-3 m-2">
+                        <div class="shadow card card-element p-3 m-2">
+                            <% if (friend.display) { %>
+                                <img class="card-img-top" src="<%=friend.thumbnail%>">
+                            <% } %>
                             <div class="card-text">
                                 <a href="/users/<%=friend._id%>"><%=friend.username%></a>
                             </div>
@@ -90,7 +98,7 @@
                 <div class='d-flex flex-row w-100'>
                     <% for (let i in pins) { %>
                         <a href="/collections/<%=matchCollections[i]%>/pins/<%=pins[i]._id%>">
-                            <div class="card card-element p-3 m-2">
+                            <div class="shadow card card-element p-3 m-2">
                                 <% if (pins[i].images.length) { %>
                                     <img class="card-image-top" src='<%=pins[i].images[0].url%>'>
                                     <% } %>

@@ -95,4 +95,11 @@ auth.canRemove = async (req, res, next) => {
 	res.redirect(`/users/${user._id}`);
 };
 
+auth.isUser = async (req, res, next) => {
+	const foundUser = await User.findById(req.params.user_id);
+	if (foundUser._id.equals(req.user._id)) return next();
+	req.flash('error', "Cannot edit another user's account");
+	res.redirect(`/users/${req.user._id}`);
+};
+
 module.exports = auth;
