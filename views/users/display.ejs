@@ -9,26 +9,26 @@
             <img src="<%=userDisplay.display%>" class="profile-img my-2">
         </div>
     <% } %>
-    <% if (isUser && false) { %>
+    <% if (isUser) { %>
         <a href="/users/<%=currentUser._id%>/edit" class="btn btn-info">Edit Account Info</a>
     <% } %>
     <% if (!isUser && currentUser) { %>
         <div>
             <% if (displayRequest) { %>
-                <form class='d-inline' action="/users/<%=userDisplay._id%>" method='post'>
+                <form class='d-inline' action="/users/<%=userDisplay._id%>/friend" method='post'>
                     <input type="hidden" value="<%=userDisplay._id%>" name='userId'>
                     <button class="btn btn-primary">Send Friend Request</button>
                 </form>
             <% } %>
             
             <% if (displayRespond) { %>
-                <form class='d-inline' action="/users/<%=userDisplay._id%>?_method=PUT" method='post'>
+                <form class='d-inline' action="/users/<%=userDisplay._id%>/friend?_method=PUT" method='post'>
                     <input type="hidden" value="<%=userDisplay._id%>" name='userId'>
                     <input type="hidden" value="accept" name='response'>
                     <button href="#" class="btn btn-success">Accept Friend Request</button>
                 </form>
     
-                <form class='d-inline' action="/users/<%=userDisplay._id%>?_method=PUT" method='post'>
+                <form class='d-inline' action="/users/<%=userDisplay._id%>/friend?_method=PUT" method='post'>
                     <input type="hidden" value="<%=userDisplay._id%>" name='userId'>
                     <input type="hidden" value="decline" name='response'>
                     <button href="#" class="btn btn-danger">Reject Friend Request</button>
@@ -36,7 +36,7 @@
             <% } %>
             
             <% if (displayRemove) { %>
-                <form class='d-inline' action="/users/<%=userDisplay._id%>?_method=DELETE" method='post'>
+                <form class='d-inline' action="/users/<%=userDisplay._id%>/friend?_method=DELETE" method='post'>
                     <input type="hidden" value="<%=userDisplay._id%>" name='userId'>
                     <button href="#" class="btn btn-danger">Remove Friend</button>
                 </form>
@@ -51,7 +51,7 @@
                 <div class="d-flex flex-row w-100 request-display">
                     <% for (let request of currentUser.requests) { %>
                         <div class="requests card m-2 p-1">
-                            <a href="/users/<%=request.id%>"><%=request.username%></a>
+                            <a href="/users/<%=request.pin%>"><%=request.username%></a>
                         </div>
                     <% } %> 
                 </div>

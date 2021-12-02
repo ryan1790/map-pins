@@ -75,7 +75,7 @@ auth.canRespond = async (req, res, next) => {
 	const user = await User.findById(req.user._id);
 	const requester = await User.findById(req.body.userId); // alter on views to make value = requestor
 	for (let request of user.requests) {
-		if (request.equals(requester._id)) {
+		if (request.pin.equals(requester._id)) {
 			return next();
 		}
 	}

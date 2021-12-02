@@ -169,14 +169,10 @@ module.exports.edit = async (req, res) => {
 			// Delete old image
 		}
 	} catch (e) {
-		console.log(e.keyPattern, e.keyValue, e.code, e.name);
 		const { username, email } = e.keyValue;
-		console.log(username, email);
 		if (username) {
-			console.log(username);
 			req.flash('error', `Username "${username}" is already in use. Please use another.`);
 		} else if (email) {
-			console.log;
 			req.flash('error', `Email "${email}" is already in use.`);
 		}
 		if (image) {

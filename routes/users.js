@@ -22,13 +22,14 @@ router.get('/logout', users.logout);
 router
 	.route('/users/:user_id')
 	.get(catchAsync(users.account))
+	.put(isLoggedIn, isUser, upload.single('image'), catchAsync(users.edit));
+
+router.get('/users/:user_id/edit', isLoggedIn, isUser, catchAsync(users.renderEditForm));
+
+router
+	.route('/users/:user_id/friend')
 	.post(isLoggedIn, canRequest, catchAsync(users.request))
 	.put(isLoggedIn, canRespond, catchAsync(users.respond))
 	.delete(isLoggedIn, canRemove, catchAsync(users.remove));
-
-router
-	.route('/users/:user_id/edit')
-	.get(isLoggedIn, isUser, catchAsync(users.renderEditForm))
-	.put(isLoggedIn, isUser, upload.single('image'), catchAsync(users.edit));
 
 module.exports = router;

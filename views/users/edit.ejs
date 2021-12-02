@@ -7,7 +7,7 @@
                 <img src="<%=user.display%>" alt="" class="card-img-tope edit-img">
                 <div class="card-body">
                     <h4 class="card-title">Edit Account</h4>
-                    <form action="/users/<%=user._id%>/edit?_method=PUT" class='validated-form' enctype="multipart/form-data" novalidate method="POST">
+                    <form action="/users/<%=user._id%>?_method=PUT" class='validated-form' enctype="multipart/form-data" novalidate method="POST">
                         <div class="mb-2">
                             <label for="email" class='form-label'>Email: </label>
                             <input required autofocus value="<%=user.email%>" type="email" name='user[email]' id='email' class='form-control'>    
