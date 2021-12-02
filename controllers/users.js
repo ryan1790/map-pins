@@ -164,12 +164,21 @@ module.exports.edit = async (req, res) => {
 			user.image.url = req.file.path;
 		}
 		await user.save();
+		req.flash('success', 'Account info updated');
 		if (image) {
 			// Delete old image
 		}
 	} catch (e) {
-		console.log(e.message);
-		req.flash('error', e.message);
+		console.log(e.keyPattern, e.keyValue, e.code, e.name);
+		const { username, email } = e.keyValue;
+		console.log(username, email);
+		if (username) {
+			console.log(username);
+			req.flash('error', `Username "${username}" is already in use. Please use another.`);
+		} else if (email) {
+			console.log;
+			req.flash('error', `Email "${email}" is already in use.`);
+		}
 		if (image) {
 			// Delete newly uploaded image
 		}
@@ -177,11 +186,12 @@ module.exports.edit = async (req, res) => {
 		return;
 	}
 	if (req.body.newPassword) {
-		user.changePassword(req.body.oldPassword, req.body.newPassword, err => {
-			if (err) {
-				req.flash('error', 'Incorrect password. Password not updated.');
-			}
-		});
+		try {
+			await user.changePassword(req.body.oldPassword, req.body.newPassword);
+			req.flash('success', ' Password updated');
+		} catch (e) {
+			req.flash('error', 'Password is incorrect');
+		}
 	}
 	res.redirect(`/users/${req.user._id}`);
 };
