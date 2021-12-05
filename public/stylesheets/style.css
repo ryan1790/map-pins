@@ -45,9 +45,17 @@ body {
 	overflow: scroll;
 }
 
+.friend-default-image {
+	height: 166px;
+}
+
 .card-element {
 	width: 200px;
 	max-height: 350px;
+}
+
+.text-gray-200 {
+	color: #e9ecef;
 }
 
 #carousel-pictures {

@@ -4,13 +4,17 @@
 </script>
 <div class="container">
     <h1><%= isUser? 'My': `${userDisplay.username}'s` %> Account</h1>
-    <% if (userDisplay.image) { %>
+    <% if (userDisplay.image?.url) { %>
         <div class="container">
             <img src="<%=userDisplay.display%>" class="profile-img my-2">
         </div>
+    <% } else { %>
+        <div class="container">
+            <img src="/user-friends-solid.svg" class="profile-img my-2">
+        </div>
     <% } %>
     <% if (isUser) { %>
-        <a href="/users/<%=currentUser._id%>/edit" class="btn btn-info">Edit Account Info</a>
+        <a href="/users/<%=currentUser._id%>/edit" class="btn btn-info my-2">Edit Account Info</a>
     <% } %>
     <% if (!isUser && currentUser) { %>
         <div>
@@ -80,8 +84,12 @@
                 <div class="d-flex flex-row w-100">
                     <% for(let friend of userDisplay.friends) { %>
                         <div class="shadow card card-element p-3 m-2">
-                            <% if (friend.display) { %>
+                            <% if (friend.image?.url) { %>
                                 <img class="card-img-top" src="<%=friend.thumbnail%>">
+                            <% } else { %>
+                                <div class="friend-default-image">
+                                    <img class="card-img-top" src="/user-friends-solid.svg">
+                                </div>
                             <% } %>
                             <div class="card-text">
                                 <a href="/users/<%=friend._id%>"><%=friend.username%></a>
@@ -101,12 +109,10 @@
                             <div class="shadow card card-element p-3 m-2">
                                 <% if (pins[i].images.length) { %>
                                     <img class="card-image-top" src='<%=pins[i].images[0].url%>'>
-                                    <% } %>
+                                <% } else { %>
+                                    <img class="card-image-top" src="/camera-solid.svg">
+                                <% } %>
                                 <h5 class="card-title"><%=pins[i].title%></h5>
-                                
-                                <p class="card-text">
-                                    <%=pins[i].title%>
-                                </p>
                             </div>
                         </a>
                     <% } %>

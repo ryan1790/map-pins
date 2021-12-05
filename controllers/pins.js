@@ -22,11 +22,6 @@ module.exports.create = async (req, res) => {
 
 module.exports.show = async (req, res) => {
 	const pin = await Pin.findById(req.params.pin_id).populate('creator').exec();
-	// .populate({
-	// 	path: 'comments',
-	// 	populate: {
-	// 		path: 'creator'
-	// 	}});
 	const pageDisplay = res.pagination;
 	const collection = await Collection.findById(req.params.collection_id).populate('creator');
 	let userRated;

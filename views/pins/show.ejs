@@ -75,26 +75,25 @@
         <% } %>
         
         <% for (comment of pageDisplay.currentPage) { %>
-          <div class="card my-2 p-2">
+          <div class="card shadow border-dark bg-secondary my-2">
+            <a  class="card-header text-info" href='/users/<%=comment.creator._id%>'>
+              <%=comment.creator.username%>
+            </a>
             <% if (comment.rating) { %>
               <p class="starability-result" data-rating="<%=comment.rating%>">
                 Rated: <%=comment.rating%> stars
               </p>
             <% } %>
-            <p class='card-text'><%=comment.body%></p>
-            <p class='text-muted'><a href='/users/<%=comment.creator._id%>'>
-              <%=comment.creator.username%>
-            </a></p>
+            <p class='card-text text-gray-200 p-2'><%=comment.body%></p>
             <% if (currentUser && comment.creator.equals(currentUser._id)) { %>
-              <div>
-                <a href="/collections/<%=collection._id%>/pins/<%=pin._id%>/<%=comment._id%>/edit" class="btn btn-info btn-sm">Edit</a>
+              <div class="card-footer">
                 <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#p-<%=comment._id%>">
                   Delete
                 </button>
                 <form class='d-inline' action="/collections/<%=collection._id%>/pins/<%=pin._id%>/<%=comment._id%>?_method=DELETE" method='POST'>
                   <%- include('../partials/confirmModal', { id: comment._id, title: 'comment' }) %>
                 </form>
-            </div>
+              </div>
             <% } %>
           </div>
         <% } %>

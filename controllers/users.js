@@ -1,7 +1,7 @@
 const User = require('../models/user');
 const Pin = require('../models/pin');
 const Collection = require('../models/collection');
-// const { cloudinary } = require('../cloudinary');
+const { cloudinary } = require('../cloudinary');
 
 module.exports.renderLoginForm = (req, res) => {
 	const title = 'Log In';
@@ -92,7 +92,6 @@ module.exports.account = async (req, res) => {
 	const matchCollections = [];
 	for (let i = 0; i < pins.length; i++) {
 		const collection = await Collection.find({ pins: { $in: [ pins[i]._id ] } }).select('_id');
-		// matchCollections.push(collection['0']['_doc']['_id']);
 		matchCollections.push(collection[0]._id);
 	}
 	const title = display.username;
@@ -166,7 +165,7 @@ module.exports.edit = async (req, res) => {
 		await user.save();
 		req.flash('success', 'Account info updated');
 		if (image) {
-			// Delete old image
+			cloudinary.uploader.destroy(image);
 		}
 	} catch (e) {
 		const { username, email } = e.keyValue;
@@ -176,7 +175,7 @@ module.exports.edit = async (req, res) => {
 			req.flash('error', `Email "${email}" is already in use.`);
 		}
 		if (image) {
-			// Delete newly uploaded image
+			cloudinary.uploader.destroy(req.file.fileName);
 		}
 		res.redirect(`/users/${req.user._id}`);
 		return;

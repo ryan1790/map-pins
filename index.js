@@ -16,11 +16,13 @@ const express = require('express'),
 	mongoSanitize = require('express-mongo-sanitize'),
 	helmet = require('helmet');
 
-const { mongoOptions, CSP } = require('./utilities/setupOptions');
+const { mongoOptions, CSP, sessionConfig } = require('./utilities/setupOptions');
 const User = require('./models/user');
 const app = express();
 
-const mongoUrl = process.env.DB_URL || 'mongodb://localhost:27017/geospatial-events';
+// const mongoUrl = 'mongodb://localhost:27017/geospatial-events';
+// const mongoUrl = process.env.DB_URL;
+const mongoUrl = 'mongodb://localhost:27017/geospatial-events2';
 mongoose.connect(mongoUrl, mongoOptions);
 const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
 
@@ -52,19 +54,9 @@ store.on('error', e => {
 
 const secure = process.env.NODE_ENV === 'production';
 // Make sure secure works — otherwise set to false
-const sessionConfig = {
-	name: 'irate',
-	secret,
-	store,
-	resave: false,
-	saveUninitialized: true,
-	cookie: {
-		httpOnly: true,
-		secure,
-		expire: Date.now() + 1000 * 60 * 60 * 24 * 7,
-		maxAge: 1000 * 60 * 60 * 24 * 7
-	}
-};
+sessionConfig.secret = secret;
+sessionConfig.store = store;
+sessionConfig.cookie.secure = secure;
 
 app.use(session(sessionConfig));
 app.use(flash());
@@ -72,10 +64,17 @@ app.use(helmet(), helmet.contentSecurityPolicy(CSP));
 
 app.use(passport.initialize());
 app.use(passport.session());
-
 passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+// Testing these
+passport.serializeUser((user, done) => {
+	done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+	User.findById(id).then(user => {
+		done(null, user);
+	});
+});
 
 app.use((req, res, next) => {
 	res.locals.currentUser = req.user;

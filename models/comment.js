@@ -8,9 +8,10 @@ const CommentSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'User',
 		required: true
-	}
+	},
+	date: { type: Date, default: Date.now }
 });
 
-// CommentSchema.index({ body: 'text', rating: 'text', 'creator.username': 'text' });
+CommentSchema.index({ body: 'text', rating: 'text', 'creator.username': 'text' });
 
 module.exports = mongoose.model('Comment', CommentSchema);

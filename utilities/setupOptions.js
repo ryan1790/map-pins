@@ -7,6 +7,17 @@ options.mongoOptions = {
 	useFindAndModify: false
 };
 
+options.sessionConfig = {
+	name: 'irate',
+	resave: false,
+	saveUninitialized: true,
+	cookie: {
+		httpOnly: true,
+		expire: Date.now() + 1000 * 60 * 60 * 24 * 7,
+		maxAge: 1000 * 60 * 60 * 24 * 7
+	}
+};
+
 options.CSP = {};
 
 const scriptSrcUrls = [

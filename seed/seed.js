@@ -3,19 +3,23 @@ const cities = require('all-the-cities');
 const Pin = require('../models/pin');
 const User = require('../models/user');
 const Collection = require('../models/collection');
+const Comment = require('../models/comment');
 
-const iterations = 200;
+const pins = 200;
+const comments = 15;
 
 const { userInfo, collectionInfo, pinInfo } = require('./seedHelper');
-const { usernames, emails, passwords } = userInfo;
-const { collectionTitles, collectionDescriptions } = collectionInfo;
-const { pinTitles, pinDescriptions, imageUrls } = pinInfo;
+const { usernames, emails, passwords, userImages } = userInfo;
+const { collectionTitles, collectionDescriptions, collImages } = collectionInfo;
+const { restaurantTitles, shopTitles, pinDescriptions, restImages, shopImages } = pinInfo;
+let [ rIndex, sIndex ] = [ 0, 0 ];
 const mongooseOptions = {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 	useCreateIndex: true
 };
-mongoose.connect('mongodb://localhost:27017/geospatial-events', mongooseOptions);
+const mongoUrl = 'mongodb://localhost:27017/geospatial-events2';
+mongoose.connect(mongoUrl, mongooseOptions);
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Connection Error:'));
@@ -31,7 +35,10 @@ async function constructUsers() {
 	for (let i in usernames) {
 		const newUser = new User({
 			username: usernames[i],
-			email: emails[i]
+			email: emails[i],
+			image: userImages[i],
+			friends: [],
+			requests: []
 		});
 		await User.register(newUser, passwords[i]);
 	}
@@ -46,7 +53,7 @@ async function constructCollections() {
 	for (let i in collectionTitles) {
 		const newCollection = new Collection({
 			title: collectionTitles[i],
-			image: sample(imageUrls),
+			image: collImages[i],
 			description: collectionDescriptions[i],
 			pins: [],
 			creator: sample(users)
@@ -57,30 +64,83 @@ async function constructCollections() {
 
 async function constructPins() {
 	const users = [];
-	const collections = [];
 	for (let alias of usernames) {
 		const foundUser = await User.findOne({ username: alias });
 		users.push(foundUser);
 	}
-	for (let title of collectionTitles) {
-		const foundCollection = await Collection.findOne({ title: title });
-		collections.push(foundCollection);
-	}
-	for (let i = 0; i < iterations; i++) {
+	// Restaurant Collection
+	const restaurants = await Collection.findOne({ title: 'Restaurants' });
+	for (let i = 0; i < 10; i++) {
 		const area = sample(usCities);
 		const newPin = new Pin({
-			title: sample(pinTitles),
+			title: sample(restaurantTitles),
 			description: sample(pinDescriptions),
 			location: area.name,
 			creator: sample(users),
 			geometry: area.loc,
-			images: [ sample(imageUrls) ]
+			images: [ restImages[rIndex], restImages[rIndex + 1] ],
+			comments: []
 		});
-		c = sample(collections);
-		c['pins'].push(newPin._id);
-		await c.save();
+		rIndex += 2;
 		await newPin.save();
+		restaurants['pins'].push(newPin._id);
+		constructComments(newPin, users, 30);
 	}
+	restaurants.save();
+
+	// Town Collection
+	const towns = await Collection.findOne({ title: 'Towns and Cities' });
+	for (let i = 0; i < pins; i++) {
+		const area = sample(usCities);
+		const newPin = new Pin({
+			title: area.name,
+			description: sample(pinDescriptions),
+			location: area.name,
+			creator: sample(users),
+			geometry: area.loc,
+			images: [],
+			comments: []
+		});
+		await newPin.save();
+		towns['pins'].push(newPin._id);
+		constructComments(newPin, users, 6);
+	}
+	towns.save();
+
+	// Shop Collection
+	const shops = await Collection.findOne({ title: 'Shops' });
+	for (let i = 0; i < 10; i++) {
+		const area = sample(usCities);
+		const newPin = new Pin({
+			title: sample(shopTitles),
+			description: sample(pinDescriptions),
+			location: area.name,
+			creator: sample(users),
+			geometry: area.loc,
+			images: [ shopImages[sIndex] ],
+			comments: []
+		});
+		sIndex++;
+		await newPin.save();
+		shops['pins'].push(newPin._id);
+		constructComments(newPin, users, comments);
+	}
+	shops.save();
+}
+
+async function constructComments(pin, users, n) {
+	const comments = [];
+	for (let i = 0; i < n; i++) {
+		const newComment = new Comment({
+			body: sample(pinDescriptions),
+			rating: 0,
+			creator: sample(users)._id
+		});
+		await newComment.save();
+		comments.push(newComment._id);
+	}
+	pin.comments = comments;
+	await pin.save();
 }
 
 async function clearDB() {
@@ -96,8 +156,4 @@ const seed = async () => {
 	await constructPins();
 };
 
-// seed().then(() => {
-// 	mongoose.connection.close(() => {
-// 		console.log('Disconnected from database.');
-// 	});
-// });
+// seed();
