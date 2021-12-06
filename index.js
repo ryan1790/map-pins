@@ -20,9 +20,9 @@ const { mongoOptions, CSP, sessionConfig } = require('./utilities/setupOptions')
 const User = require('./models/user');
 const app = express();
 
-// const mongoUrl = 'mongodb://localhost:27017/geospatial-events';
+const mongoUrl = 'mongodb://localhost:27017/geospatial-events';
+// const mongoUrl = 'mongodb://localhost:27017/geospatial-events2';
 // const mongoUrl = process.env.DB_URL;
-const mongoUrl = 'mongodb://localhost:27017/geospatial-events2';
 mongoose.connect(mongoUrl, mongoOptions);
 const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
 

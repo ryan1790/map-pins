@@ -10,15 +10,14 @@ const comments = require('../controllers/comments');
 
 router.post('/', isLoggedIn, validateComment, catchAsync(checkRating), catchAsync(comments.create));
 
-router
-	.route('/:comment_id')
-	.put(
-		isLoggedIn,
-		catchAsync(checkCommentOwnership),
-		validateComment,
-		catchAsync(checkRating),
-		catchAsync(comments.update)
-	)
-	.delete(isLoggedIn, checkCommentOwnership, catchAsync(comments.delete));
+router.delete('/:comment_id', isLoggedIn, checkCommentOwnership, catchAsync(comments.delete));
+//.route('/:comment_id').delete(isLoggedIn, checkCommentOwnership, catchAsync(comments.delete));
+// .put(
+// 	isLoggedIn,
+// 	catchAsync(checkCommentOwnership),
+// 	validateComment,
+// 	catchAsync(checkRating),
+// 	catchAsync(comments.update)
+// )
 
 module.exports = router;

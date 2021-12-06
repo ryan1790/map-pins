@@ -1,7 +1,7 @@
 const BaseJoi = require('joi');
 const sanitizeHtml = require('sanitize-html');
 const pattern = /^\[ {0,1}-{0,1}\d*\.{0,1}\d{0,2}, {0,1}-{0,1}\d*\.{0,1}\d{0,2} {0,1}\]$/;
-
+const rating = /[0-5]/;
 const extension = joi => ({
 	type: 'string',
 	base: joi.string(),
@@ -46,7 +46,7 @@ module.exports.pinSchema = Joi.object({
 
 module.exports.commentSchema = Joi.object({
 	comment: Joi.object({
-		rating: Joi.number().min(0).max(5),
+		rating: Joi.string().regex(rating).min(1).max(1),
 		body: Joi.string().escapeHTML(),
 		creator: Joi.string().escapeHTML()
 	}).required()

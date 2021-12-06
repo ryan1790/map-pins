@@ -64,7 +64,7 @@
         <% } %>
       </form>
 
-      <% if (pin.comments.length) { %>
+      <% if (pageDisplay.currentPage) { %>
         <h3>Comments</h3>
         <%- include('../partials/searchBars') %>
         <% if (pageDisplay.prevPage) { %>
@@ -79,7 +79,7 @@
             <a  class="card-header text-info" href='/users/<%=comment.creator._id%>'>
               <%=comment.creator.username%>
             </a>
-            <% if (comment.rating) { %>
+            <% if (comment.rating !== '0') { %>
               <p class="starability-result" data-rating="<%=comment.rating%>">
                 Rated: <%=comment.rating%> stars
               </p>
@@ -97,6 +97,13 @@
             <% } %>
           </div>
         <% } %>
+      <% } else { %>
+        <div class="container pt-3">
+          <h5><%= pageDisplay.empty? 'No results found. Modify Search?': 'No comments yet!' %></h5>
+          <% if (pageDisplay.empty) { %>
+            <%- include('../partials/searchBars') %>
+          <% } %>
+        </div>
       <% } %>
     </div>
   </div>

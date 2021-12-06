@@ -45,7 +45,7 @@
       </div>
     <% } else { %>
       <div class="container pt-3">
-        <%= pageDisplay.empty? 'No results found. Modify Search?': 'No pins yet! Start creating!' %>
+        <h5><%= pageDisplay.empty? 'No results found. Modify Search?': 'No pins yet! Start creating!' %></h5>
         <% if (pageDisplay.empty) { %>
           <%- include('../partials/searchBars') %>
         <% } %>

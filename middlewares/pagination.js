@@ -34,11 +34,10 @@ pagination.paginate = model => {
 			find['$text'] = { $search: filter };
 			sort.score = { $meta: 'textScore' };
 		} else {
-			sort.datefield = -1;
+			sort.date = -1;
 		}
 
 		const numDocuments = await model.find(find).countDocuments().exec();
-
 		if (numDocuments === 0) {
 			if (totalDocuments === 0) {
 				pag.empty = false;

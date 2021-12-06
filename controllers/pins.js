@@ -24,19 +24,18 @@ module.exports.show = async (req, res) => {
 	const pin = await Pin.findById(req.params.pin_id).populate('creator').exec();
 	const pageDisplay = res.pagination;
 	const collection = await Collection.findById(req.params.collection_id).populate('creator');
-	let userRated;
+	let userRated = false;
 	if (req.user) {
 		const userComments = await Comment.find({ _id: { $in: pin.comments }, creator: req.user._id });
 		if (userComments.length) {
 			for (let comment of userComments) {
-				if ([ 1, 2, 3, 4, 5 ].includes(comment.rating)) {
+				if ([ '1', '2', '3', '4', '5' ].includes(comment.rating)) {
 					userRated = true;
 					break;
 				}
 			}
 		}
 	}
-	if (!userRated) userRated = false;
 	const title = pin.title;
 	res.render('pins/show', { title, pin, collection, userRated, pageDisplay });
 };

@@ -4,6 +4,7 @@ const Pin = require('../models/pin');
 const User = require('../models/user');
 const Collection = require('../models/collection');
 const Comment = require('../models/comment');
+// require('dotenv').config();
 
 const pins = 200;
 const comments = 15;
@@ -18,7 +19,9 @@ const mongooseOptions = {
 	useUnifiedTopology: true,
 	useCreateIndex: true
 };
-const mongoUrl = 'mongodb://localhost:27017/geospatial-events2';
+// const mongoUrl = 'mongodb://localhost:27017/geospatial-events2';
+const mongoUrl = process.env.DB_URL;
+console.log(mongoUrl);
 mongoose.connect(mongoUrl, mongooseOptions);
 
 const db = mongoose.connection;
@@ -133,8 +136,9 @@ async function constructComments(pin, users, n) {
 	for (let i = 0; i < n; i++) {
 		const newComment = new Comment({
 			body: sample(pinDescriptions),
-			rating: 0,
-			creator: sample(users)._id
+			rating: '0',
+			creator: sample(users)._id,
+			date: new Date()
 		});
 		await newComment.save();
 		comments.push(newComment._id);
