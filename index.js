@@ -20,9 +20,9 @@ const { mongoOptions, CSP, sessionConfig } = require('./utilities/setupOptions')
 const User = require('./models/user');
 const app = express();
 
-const mongoUrl = 'mongodb://localhost:27017/geospatial-events';
+// const mongoUrl = 'mongodb://localhost:27017/geospatial-events';
 // const mongoUrl = 'mongodb://localhost:27017/geospatial-events2';
-// const mongoUrl = process.env.DB_URL;
+const mongoUrl = process.env.DB_URL;
 mongoose.connect(mongoUrl, mongoOptions);
 const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
 
@@ -55,7 +55,7 @@ const secure = true; // process.env.NODE_ENV === 'production';
 sessionConfig.secret = secret;
 sessionConfig.store = store;
 sessionConfig.cookie.secure = secure;
-// app.set('trust proxy', 1);
+app.set('trust proxy', 1);
 app.use(session(sessionConfig));
 app.use(flash());
 app.use(helmet(), helmet.contentSecurityPolicy(CSP));
