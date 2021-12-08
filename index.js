@@ -55,7 +55,7 @@ const secure = true; // process.env.NODE_ENV === 'production';
 sessionConfig.secret = secret;
 sessionConfig.store = store;
 sessionConfig.cookie.secure = secure;
-app.set('trust proxy', 1);
+// app.set('trust proxy', 1);
 app.use(session(sessionConfig));
 app.use(flash());
 app.use(helmet(), helmet.contentSecurityPolicy(CSP));
