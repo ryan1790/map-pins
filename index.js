@@ -43,16 +43,13 @@ app.use(mongoSanitize());
 const store = MongoStore.create({
 	mongoUrl,
 	touchAfter: 24 * 3600
-	// crypto: {
-	// 	secret: 'squirrel'
-	// }
 });
 
 store.on('error', e => {
 	console.log('SESSION STORE ERROR', e);
 });
 
-const secure = process.env.NODE_ENV === 'production';
+const secure = false; // process.env.NODE_ENV === 'production';
 // Make sure secure works — otherwise set to false
 sessionConfig.secret = secret;
 sessionConfig.store = store;
