@@ -20,9 +20,9 @@ const { mongoOptions, CSP, sessionConfig } = require('./utilities/setupOptions')
 const User = require('./models/user');
 const app = express();
 
-// const mongoUrl = 'mongodb://localhost:27017/geospatial-events';
+const mongoUrl = 'mongodb://localhost:27017/geospatial-events';
 // const mongoUrl = 'mongodb://localhost:27017/geospatial-events2';
-const mongoUrl = process.env.DB_URL;
+// const mongoUrl = process.env.DB_URL;
 mongoose.connect(mongoUrl, mongoOptions);
 const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
 
@@ -42,19 +42,20 @@ app.use(mongoSanitize());
 
 const store = MongoStore.create({
 	mongoUrl,
-	touchAfter: 24 * 3600
+	touchAfter: 24 * 3600,
+	secret: process.env.SECRET
 });
 
 store.on('error', e => {
 	console.log('SESSION STORE ERROR', e);
 });
 
-const secure = false; // process.env.NODE_ENV === 'production';
+const secure = true; // process.env.NODE_ENV === 'production';
 // Make sure secure works — otherwise set to false
 sessionConfig.secret = secret;
 sessionConfig.store = store;
 sessionConfig.cookie.secure = secure;
-
+app.set('trust proxy', 1);
 app.use(session(sessionConfig));
 app.use(flash());
 app.use(helmet(), helmet.contentSecurityPolicy(CSP));
