@@ -21,7 +21,6 @@ const mongooseOptions = {
 };
 // const mongoUrl = 'mongodb://localhost:27017/geospatial-events2';
 const mongoUrl = process.env.DB_URL;
-console.log(mongoUrl);
 mongoose.connect(mongoUrl, mongooseOptions);
 
 const db = mongoose.connection;
@@ -121,7 +120,8 @@ async function constructPins() {
 			creator: sample(users),
 			geometry: area.loc,
 			images: [ shopImages[sIndex] ],
-			comments: []
+			comments: [],
+			ratings: []
 		});
 		sIndex++;
 		await newPin.save();

@@ -46,7 +46,8 @@ const PinSchema = new Schema(
 			type: Schema.Types.ObjectId,
 			ref: 'User',
 			required: true
-		}
+		},
+		ratings: [ Number ]
 	},
 	options
 );
@@ -58,6 +59,11 @@ PinSchema.virtual('properties').get(function() {
 		popupHtml: `<a class="cm-popup" href="/collections/#collection_id/pins/${this._id}">
 						${this.location}</a>`
 	};
+});
+
+PinSchema.virtual('displayRating').get(function() {
+	if (!this.ratings.length) return 0;
+	return Math.round(10 * this.ratings.reduce((p, n) => p + n) / this.ratings.length) / 10;
 });
 
 const deleteComments = async pin => {

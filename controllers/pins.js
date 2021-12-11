@@ -13,6 +13,7 @@ module.exports.create = async (req, res) => {
 	const { collection_id } = req.params;
 	const images = files.map(file => ({ url: file.path, fileName: file.filename }));
 	pin.geometry = { type: 'Point', coordinates: JSON.parse(coordinates) };
+	pin.ratings = [];
 	const newPin = new Pin({ ...pin, images, creator: user._id });
 	await Collection.findByIdAndUpdate(collection_id, { $push: { pins: newPin } });
 	await newPin.save();

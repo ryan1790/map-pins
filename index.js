@@ -50,8 +50,7 @@ store.on('error', e => {
 	console.log('SESSION STORE ERROR', e);
 });
 
-const secure = true; // process.env.NODE_ENV === 'production';
-// Make sure secure works — otherwise set to false
+const secure = process.env.NODE_ENV === 'production';
 sessionConfig.secret = secret;
 sessionConfig.store = store;
 sessionConfig.cookie.secure = secure;
@@ -63,11 +62,9 @@ app.use(helmet(), helmet.contentSecurityPolicy(CSP));
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
-// Testing these
 passport.serializeUser((user, done) => {
 	done(null, user.id);
 });
-
 passport.deserializeUser((id, done) => {
 	User.findById(id).then(user => {
 		done(null, user);

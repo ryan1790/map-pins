@@ -24,6 +24,9 @@
       <% } %>
 
       <p class='text-muted'><%=pin.location%></p>
+      <% if (pin.displayRating >= 1) { %>
+        <p class="text-muted">Average Rating: <%=pin.displayRating%></p>
+      <% } %>
       <p><%=pin.description%></p>
       <p><a href="/users/<%=pin.creator._id%>">
         <%=pin.creator.username%>
@@ -81,7 +84,7 @@
             </a>
             <% if (comment.rating !== '0') { %>
               <p class="starability-result" data-rating="<%=comment.rating%>">
-                Rated: <%=comment.rating%> stars
+                Rated: <%=comment.rating%> stars <%= comment.rating !== '0' %>
               </p>
             <% } %>
             <p class='card-text text-gray-200 p-2'><%=comment.body%></p>

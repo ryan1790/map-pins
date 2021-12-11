@@ -22,6 +22,9 @@
             <%=pin.title%>
           </button>
           <div class="collapse mt-4" id="pin<%=pin._id%>">
+            <% if (pin.displayRating >= 1) { %>
+              <p class="text-muted">Average Rating: <%=pin.displayRating%></p>
+            <% } %>
             <p><%=pin.location%></p>
             <p><%=pin.description%></p>
             <p class='text-muted'><a href="/users/<%=pin.creator._id%>">
