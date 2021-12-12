@@ -15,7 +15,7 @@ const url = 'https://api.mapbox.com/geocoding/v5/mapbox.places';
 let marker;
 const mapMarkers = [];
 
-let center = [ 90, 90 ];
+let center = [ -97, 37 ];
 if (enterLng.value && enterLat.value) center = [ enterLng.value, enterLat.value ];
 
 mapboxgl.accessToken = accessToken;
@@ -23,7 +23,7 @@ const map = new mapboxgl.Map({
 	container: 'map',
 	style: 'mapbox://styles/ryan301/ckjbeyqhd4irn19mcmg3fmkvx', // stylesheet location
 	center, // starting position [lng, lat]
-	zoom: 4 // starting zoom
+	zoom: 1 // starting zoom
 });
 
 map.addControl(new mapboxgl.NavigationControl());

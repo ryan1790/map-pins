@@ -4,7 +4,7 @@ const Collection = require('../models/collection'),
 	{ cloudinary } = require('../cloudinary');
 
 module.exports.renderNewForm = (req, res) => {
-	res.render('pins/new', { collection_id: req.params.collection_id });
+	res.render('pins/new', { collection_id: req.params.collection_id, title: 'New Pin' });
 };
 
 module.exports.create = async (req, res) => {
