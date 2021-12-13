@@ -24,23 +24,19 @@ const CollectionSchema = new Schema({
 });
 
 CollectionSchema.post('findOneAndDelete', async collection => {
-	const imageFiles = [];
 	if (collection.image && collection.image.url) {
-		imageFiles.push(collection.image.fileName);
+		cloudinary.uploader.destroy(collection.image.fileName);
 	}
 	if (collection.pins.length) {
 		for (pinId of collection.pins) {
 			const pin = await Pin.findById(pinId);
 			if (pin.images.length) {
-				for (image in pin.images) {
-					imageFiles.push(image.fileName);
+				for (image of pin.images) {
+					cloudinary.uploader.destroy(image.fileName);
 				}
 			}
-			await pin.remove();
+			pin.remove();
 		}
-	}
-	for (let image of imageFiles) {
-		cloudinary.uploader.destroy(image);
 	}
 });
 

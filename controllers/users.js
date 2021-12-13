@@ -88,7 +88,7 @@ module.exports.account = async (req, res) => {
 		isUser = false;
 	}
 	const collections = await Collection.find({ creator: display._id });
-	const pins = await (await Pin.find({ creator: display._id })).slice(0, 5);
+	const pins = await Pin.find({ creator: display._id }).sort({ date: -1 }).limit(5);
 	const matchCollections = [];
 	for (let i = 0; i < pins.length; i++) {
 		const collection = await Collection.find({ pins: { $in: [ pins[i]._id ] } }).select('_id');

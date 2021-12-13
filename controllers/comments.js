@@ -24,8 +24,12 @@ module.exports.delete = async (req, res) => {
 	const pin = await Pin.findById(pin_id);
 	await Comment.findByIdAndDelete(comment_id, (err, doc) => {
 		if (doc.rating) {
-			const values = pin.ratings;
-			values.splice(values.indexOf(doc.rating), 1);
+			if (err) {
+				console.log(err);
+			} else {
+				const values = pin.ratings;
+				values.splice(values.indexOf(doc.rating), 1);
+			}
 		}
 	});
 	await pin.save();
