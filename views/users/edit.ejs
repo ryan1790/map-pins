@@ -4,7 +4,11 @@
     <div class="row">
         <div class="col-md-6 offset-md-3 col-xl-4 offset-xl-4">
             <div class="card shadow">
-                <img src="<%=user.display%>" alt="" class="card-img-tope edit-img">
+                <% if (user.image.url) { %>
+                    <img src="<%=user.display%>" class="card-img-tope edit-img">
+                <% } else { %>
+                    <img src="/user-friends-solid.svg" class="card-img-tope edit-img">
+                <% } %>
                 <div class="card-body">
                     <h4 class="card-title">Edit Account</h4>
                     <form action="/users/<%=user._id%>?_method=PUT" class='validated-form' enctype="multipart/form-data" novalidate method="POST">
