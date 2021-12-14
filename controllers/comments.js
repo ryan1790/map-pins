@@ -22,17 +22,16 @@ module.exports.create = async (req, res) => {
 module.exports.delete = async (req, res) => {
 	const { comment_id, collection_id, pin_id } = req.params;
 	const pin = await Pin.findById(pin_id);
-	await Comment.findByIdAndDelete(comment_id, (err, doc) => {
-		if (doc.rating) {
-			if (err) {
-				console.log(err);
-			} else {
-				const values = pin.ratings;
-				values.splice(values.indexOf(doc.rating), 1);
+	let score = 0;
+	Comment.findByIdAndDelete(comment_id, async (err, doc) => {
+		score = parseInt(doc.rating);
+		if (score) {
+			if (score) {
+				pin.ratings.splice(pin.ratings.indexOf(doc.rating), 1);
+				await pin.save();
 			}
 		}
 	});
-	await pin.save();
 	await Pin.findByIdAndUpdate(pin_id, { $pull: { comments: comment_id } });
 	req.flash('success', 'Comment deleted!');
 	res.redirect(`/collections/${collection_id}/pins/${pin_id}`);
