@@ -1,7 +1,6 @@
 const BaseJoi = require('joi');
 const sanitizeHtml = require('sanitize-html');
 const pattern = /^\[ {0,1}-{0,1}\d*\.{0,1}\d{0,2}, {0,1}-{0,1}\d*\.{0,1}\d{0,2} {0,1}\]$/;
-const rating = /[0-5]/;
 const extension = joi => ({
 	type: 'string',
 	base: joi.string(),
@@ -37,17 +36,20 @@ module.exports.pinSchema = Joi.object({
 	pin: Joi.object({
 		title: Joi.string().required().escapeHTML(),
 		description: Joi.string().required().escapeHTML(),
-		location: Joi.string().required().escapeHTML(),
-		date: Joi.date(),
-		creator: Joi.string().escapeHTML()
+		location: Joi.string().required().escapeHTML()
 	}).required(),
 	coordinates: Joi.string().regex(pattern).required()
 });
 
 module.exports.commentSchema = Joi.object({
-	comment: Joi.object({
-		rating: Joi.string().regex(rating).min(1).max(1),
-		body: Joi.string().escapeHTML(),
-		creator: Joi.string().escapeHTML()
-	}).required()
+	comment: Joi.alternatives().try(
+		Joi.object({
+			rating: Joi.string().valid('1', '2', '3', '4', '5').escapeHTML().required(),
+			body: Joi.string().allow('').escapeHTML()
+		}),
+		Joi.object({
+			rating: Joi.string().valid('0'),
+			body: Joi.string().min(5).escapeHTML()
+		})
+	)
 });
